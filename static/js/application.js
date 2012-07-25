@@ -49,6 +49,7 @@ function event_task_drop(event, ui) {
 $(function() {
 	$.get('/tasks').success(function(tasks) {
 		all_tasks = tasks;
+		$(tasks.pending).each(function(i,t){t.editable=true;});
 		ich.tasklist(tasks).appendTo('#mainbody');
 		$('#pending_tasks, #done_tasks').sortable({
 			connectWith: '.connected_tasks',
