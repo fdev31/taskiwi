@@ -6,11 +6,9 @@ function edit_task_popup(uuid) {
 	ich.edit_dialog(t).modal();
 };
 
-function add_new_task() {
-	var proj = $('#new_task_project').val();
-	var descr = $('#new_task_descr').val();
+function add_new_task(proj, descr) {
 	// TODO: ajax put new task into server
-	// - return the uuid
+	// - return the uuid so it's editable
 	var ti = ich.taskitem({
 		editable: false,
 		project: proj,
