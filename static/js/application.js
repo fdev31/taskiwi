@@ -37,12 +37,15 @@ function task_by_uuid(uuid) {
 
 function event_task_drop(event, ui) {
 	var uuid = ui.item[0].id;
-	if (event.target.id == "done_tasks") {
-		alert('Marking '+uuid+' task done');
-	} else {
-		alert('Creating '+uuid+' clone');
-	}
-}
+	$(ui.item[0]).find('.btn').fadeOut();
+	setTimeout(function(){
+		if (event.target.id == "done_tasks") {
+			alert('Marking '+uuid+' task done');
+		} else {
+			alert('Creating '+uuid+' clone');
+		}
+	}, 500);
+};
 
 // INIT
 
