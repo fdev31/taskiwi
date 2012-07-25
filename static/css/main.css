@@ -1,0 +1,26 @@
+
+ul > li.task {
+	padding: .5ex;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+ul.connected_tasks {
+	padding: 1ex;
+}
+.wip {
+	background-color: #f5eeee;
+}
+
+/*
+ul li.task:nth-child(even) {
+	background-color: #f5e5e5; 
+}
+*/
+
+ul li.task:hover {
+/*	-webkit-transition-duration: 0.3s; */
+	background-color: white; 
+}
