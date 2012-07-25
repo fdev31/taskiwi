@@ -6,6 +6,18 @@ function edit_task_popup(uuid) {
 	ich.edit_dialog(t).modal();
 };
 
+function add_new_task() {
+	var proj = $('#new_task_project').val();
+	var descr = $('#new_task_descr').val();
+	// TODO: ajax put new task into server
+	// - return the uuid
+	var ti = ich.taskitem({
+		editable: false,
+		project: proj,
+		description: descr}).appendTo('#pending_tasks').fadeIn(2000);
+
+};
+
 function task_by_uuid(uuid) {
 	var found = false;
 	all_tasks.pending.forEach( function(o) {
