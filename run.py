@@ -27,6 +27,7 @@ def cb(fname):
 @bottle.route('/css/<fname:path>')
 def cb(fname):
     return bottle.static_file(fname, root=ROOT+'/static/css/')
+
 if __name__ == "__main__":
     bottle.debug(True)
     bottle.run()
