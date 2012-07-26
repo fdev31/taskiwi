@@ -47,9 +47,24 @@ function event_task_drop(event, ui) {
 
 // INIT
 
+
+
 $(function() {
+    var sort_by_project = function(a,b) {
+        var x = (a.project || '').toUpperCase();
+        var y = (b.project || '').toUpperCase();
+        if( x < y) {
+            return -1;
+        } else if (x === y) {
+            return 0;
+        } else {
+            return 1;
+        }
+    };
 	$.get('/tasks').success(function(tasks) {
 		all_tasks = tasks;
+        all_tasks.pending.sort(sort_by_project);
+        all_tasks.completed.sort(sort_by_project);
 		$(tasks.pending).each(function(i,t){t.editable=true;});
 		ich.tasklist(tasks).appendTo('#mainbody');
 		$('#pending_tasks, #done_tasks').sortable({
