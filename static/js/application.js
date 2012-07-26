@@ -12,7 +12,7 @@ function edit_task_popup(uuid) {
 	ich.edit_dialog(t).modal();
 };
 
-function add_new_task(proj, descr) {
+function add_new_task(proj, descr, cb) {
     $.post('/tasks', {'project': proj, 'description': descr},
         function(infos) {
             infos.editable = true;
@@ -28,6 +28,7 @@ function add_new_task(proj, descr) {
             all_tasks.pending.push(infos);
             sort_tasks();
             ti.fadeIn(2000);
+            if(!!cb) cb();
         });
 };
 
