@@ -1,11 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<!--
-TODO:
- - /projects : return list of project names
-      bind autocompletion with it to #new_task_proj
- - make new item fade in (setTimeout or more elegant solution...)
- -->
   <head>
     <meta charset="utf-8">
     <title>Twitter Bootstrap</title>
@@ -65,12 +59,12 @@ TODO:
 	</div>
 </script>
 <div>
-	<form class="well form-search">
-		  <label>Project<input type="text" id="new_task_project" class="input-medium" data-provide="typeahead"></label>
+	<form class="well form-search" action="#">
+		  <label>Project <input type="text" id="new_task_project" class="input-medium" data-provide="typeahead"></label>
 		  &nbsp;
-		  <label>Description<input type="text" id="new_task_descr" class="input-xlarge search-query"></label>
-		  <button type="submit" onclick="add_new_task($('#new_task_project'), $('#new_task_descr'))" class="btn">Make new</button>
-		</form>
+		  <label>Description <input type="text" id="new_task_descr" class="input-xlarge search-query"></label>
+		  <button type="submit" onclick="add_new_task($('#new_task_project').val(), $('#new_task_descr').val())" class="btn">Add</button>
+    </form>
 </div>
 <script id="tasklist" type="text/html">
 <div class="tasklist container">
@@ -85,7 +79,7 @@ TODO:
 
 	<div class="well span4">
 		<h2>DONE</h2>
-		<ul id="done_tasks" class="connected_tasks">
+		<ul id="done_tasks" class="connected_tasks" style="overflow-x: hidden; overflow-y: scroll; height: 50ex;">
 		{{#completed}}
 			{{>taskitem}}
 		{{/completed}}

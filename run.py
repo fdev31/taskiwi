@@ -8,9 +8,20 @@ ROOT=os.path.curdir
 
 w = taskw.TaskWarrior()
 
-@bottle.route('/tasks')
+@bottle.route('/tasks', method=['GET', 'POST'])
 def cb():
-    return w.load_tasks()
+    if bottle.request.method == 'GET':
+        # fetch
+        return w.load_tasks()
+    else:
+        if bottle.request.POST.get('action') == 'remove':
+            # delete
+            return w.task_done(uuid=bottle.request.params['uuid'])
+        else:
+            # new
+            d = {k: v.encode('latin1').decode('utf-8') for k,v in bottle.request.POST.items()}
+#            d = bottle.request.POST # faster operations (shouldn't it be valid utf-8 already ??)
+            return w.task_add(**d)
 
 @bottle.route('/')
 def cb():
