@@ -1,6 +1,19 @@
 @basecolor: #eed;
 @seccolor: #ddc;
 
+.task_priH {
+    color: red;
+}
+.task_priM {
+    color: green;
+}
+.task_pri {
+    color: black;
+}
+.task_priL {
+    color: #666;
+}
+
 .gradient(@c1, @c2) {
     background: @c1; /* Old browsers */
     background: -moz-linear-gradient(top, @c1 0%, @c2 100%); /* FF3.6+ */
@@ -46,6 +59,8 @@ ul > li.task {
 }
 ul.connected_tasks {
 	padding: 1ex;
+    margin: 0;
+    list-style: none;
 }
 .wip {
 	background-color: #f5eeee;

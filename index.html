@@ -38,18 +38,33 @@
 		<h3>Edit</h3>
 	  </div>
 	  <div class="modal-body">
+            {{#project}}[ <b>{{project}}</b> ]{{/project}} {{#status}}<span class="pull-right">{{status}}{{#priority}}&nbsp;(prio: {{priority}}){{/priority}}</span>{{/status}}
 		  <dl class="dl-horizontal">
-		    <dt>project</dt>
-		    <dd>{{project}}</dd>
-
-		    <dt>descr</dt>
-		    <dd>{{description}}</dd>
-
-		    <dt>status</dt>
-		    <dd>{{status}}</dd>
 
 		    <dt>created on</dt>
 		    <dd>{{date}}</dd>
+
+            {{#due_date}}
+		    <dt>due for</dt>
+		    <dd>{{due_date}}</dd>
+            {{/due_date}}
+
+            {{#end_date}}
+		    <dt>finished on</dt>
+		    <dd>{{end_date}}</dd>
+            {{/end_date}}
+
+            <hr />
+
+		    <dt>description</dt>
+		    <dd>{{description}}</dd>
+
+            <hr />
+
+            {{#annotations}}
+            <dt>{{id}}</dt>
+            <dd>{{content}}</dd>
+            {{/annotations}}
 		  </dl>
 	  </div>
 	  <div class="modal-footer">
@@ -64,11 +79,12 @@
 		  &nbsp;
 		  <label>Description <input type="text" id="new_task_descr" class="input-xlarge search-query"></label>
           <button type="submit" onclick="add_new_task($('#new_task_project').val(), $('#new_task_descr').val(), function(){$('#new_task_descr').val(''); set_focus();})" class="btn">Add</button>
+          <button onclick="filter_tasks(); set_focus(); return false;" class="btn">Filter</button>
     </form>
 </div>
 <script id="tasklist" type="text/html">
-<div class="tasklist container">
-	<div class="well wip span6">
+<div class="tasklist row-fluid">
+	<div class="well wip span7">
 		<h2>TODO</h2>
 		<ul id="pending_tasks" class="connected_tasks">
 		{{#pending}}
@@ -77,7 +93,7 @@
 		</ul>
 	</div>
 
-	<div class="well span4">
+	<div class="well span5">
 		<h2>DONE</h2>
 		<ul id="done_tasks" class="connected_tasks" style="overflow-x: hidden; overflow-y: scroll; height: 50ex;">
 		{{#completed}}
@@ -88,26 +104,25 @@
 </div>
 </script>
 
-<script id="taskitem" type="text/html"><li class="dragdrop-draggable dragdrop-handle task task_{{status}}" task_{{priority}} id="{{uuid}}">
+<script id="taskitem" type="text/html"><li class="dragdrop-draggable dragdrop-handle task task_{{status}} task_pri{{priority}}" id="{{uuid}}">
 		{{#project}}
 		<span class="proj_name"><b>[ {{project}} ]</b></span>
 		{{/project}}
+		{{#editable}}
+		<a class="btn btn-mini pull-right" href="#" onclick="edit_task_popup('{{uuid}}')">edit</a>
+		{{/editable}}
 		&nbsp;
 		{{description}}
-		{{#editable}}
-		<a class="btn btn-mini" href="#" onclick="edit_task_popup('{{uuid}}')">edit</a>
-		{{/editable}}
 </li></script>
 
 <!-- /templates -->
 
-	<div id="mainbody" class="container">
+	<div id="mainbody" class="container-fluid">
     </div><!-- /container -->
 
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
     <script src="./js/jquery.js"></script>
     <script src="./js/jquery-ui.min.js"></script>
     <script src="./js/bootstrap-transition.js"></script>
