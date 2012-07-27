@@ -103,8 +103,8 @@ return false;"><i class="icon-search"></i></button>
           <input type="submit" class="btn" onclick="add_new_task($('#new_task_project').val(), $('#new_task_descr').val(), function(){$('#new_task_descr').val(''); set_focus();}); return false;" title="Add a task with given descripion in the given project (or none)" value="Add"></input>
           <button onclick="apply_filter({proj: $('#new_task_project').val(), descr: $('#new_task_descr').val()}); set_focus(); return false;" class="btn" title="Hides tasks that aren't matching project and description entries">Filter</button>
 
-          <button title="List everything and reset input" class="btn pull-right" onclick="$('#new_task_project').val(''); $('#new_task_descr').val(''); apply_filter(); return false;"><i class="icon-list-alt"></i></button>
           <button data-toggle="button" title="Toggle DONE tasks visibility" class="btn pull-right" onclick="toggle_done_display(); return false;"><i class="icon-eye-close"></i></button>
+          <button title="List everything and reset input" class="btn pull-right" onclick="$('#new_task_project').val(''); $('#new_task_descr').val(''); apply_filter(); return false;"><i class="icon-list-alt"></i></button>
     </form>
 </div>
 <script id="tasklist" type="text/html">
