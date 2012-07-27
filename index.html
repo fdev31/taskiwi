@@ -31,6 +31,25 @@
 
 <!-- mustaches -->
 
+<script id="proj_list_dialog" type="text/html">
+	<div class="modal fade hide">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+        <h3>Filter project</h3>
+	  </div>
+	  <div class="modal-body">
+          <ul>
+          {{#projects}}
+          <li><a data-dismiss="modal" href="#" onclick="apply_filter({proj:'{{.}}'});">{{.}}</a></li>
+          {{/projects}}
+          </ul>
+	  </div>
+	  <div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Close</a>
+	  </div>
+	</div>
+</script>
+
 <script id="edit_dialog" type="text/html">
 	<div class="modal fade hide">
 	  <div class="modal-header">
@@ -73,19 +92,25 @@
 	  </div>
 	</div>
 </script>
-<div>
-	<form class="well form-search" action="#">
-		  <label>Project <input type="text" id="new_task_project" class="input-medium" data-provide="typeahead"></label>
+<div class="row-fluid">
+	<form class="form-search span12 well-small" action="#">
+		  <label title="Optional project of the task">Project <input placeholder="Project name (optional)" type="text" id="new_task_project" class="input-medium" data-provide="typeahead"></label>
+          <button title="Filter projects in a list" class="btn btn-small" onclick="ich.proj_list_dialog({'projects': all_projects}).modal();
+return false;"><i class="icon-search"></i></button>
 		  &nbsp;
-		  <label>Description <input type="text" id="new_task_descr" class="input-xlarge search-query"></label>
-          <button type="submit" onclick="add_new_task($('#new_task_project').val(), $('#new_task_descr').val(), function(){$('#new_task_descr').val(''); set_focus();}); return false;" class="btn">Add</button>
-          <button onclick="filter_tasks(); set_focus(); return false;" class="btn">Filter</button>
+		  <label title="Type the description of the task here. Can be partial if you'r using the filter action.">Description <input placeholder="Short title or part of the filter" type="text" id="new_task_descr" class="input-xlarge search-query" autofocus></label>
+
+          <input type="submit" class="btn" onclick="add_new_task($('#new_task_project').val(), $('#new_task_descr').val(), function(){$('#new_task_descr').val(''); set_focus();}); return false;" title="Add a task with given descripion in the given project (or none)" value="Add"></input>
+          <button onclick="apply_filter({proj: $('#new_task_project').val(), descr: $('#new_task_descr').val()}); set_focus(); return false;" class="btn" title="Hides tasks that aren't matching project and description entries">Filter</button>
+
+          <button title="List everything and reset input" class="btn pull-right" onclick="$('#new_task_project').val(''); $('#new_task_descr').val(''); apply_filter(); return false;"><i class="icon-list-alt"></i></button>
+          <button data-toggle="button" title="Toggle DONE tasks visibility" class="btn pull-right" onclick="toggle_done_display(); return false;"><i class="icon-eye-close"></i></button>
     </form>
 </div>
 <script id="tasklist" type="text/html">
 <div class="tasklist row-fluid">
 	<div class="well wip span7">
-        <h2><a href="#" onclick="$('#pending_tasks').slideToggle()">TODO</a></h2>
+        <h2>TODO</h2>
 		<ul id="pending_tasks" class="connected_tasks">
 		{{#pending}}
 			{{>taskitem}}
@@ -94,7 +119,7 @@
 	</div>
 
 	<div class="well span5">
-        <h2><a href="#" onclick="$('#done_tasks').slideToggle()">DONE</a></h2>
+        <h2>DONE</h2>
 		<ul id="done_tasks" class="connected_tasks" style="overflow-x: hidden; overflow-y: scroll; height: 50ex;">
 		{{#completed}}
 			{{>taskitem}}
@@ -112,7 +137,7 @@
 		<a class="btn btn-mini pull-right" href="#" onclick="edit_task_popup('{{uuid}}')">edit</a>
 		{{/editable}}
 		&nbsp;
-		{{description}}
+        {{description}}
 </li></script>
 
 <!-- /templates -->
@@ -128,6 +153,7 @@
     <script src="./js/bootstrap-transition.js"></script>
     <script src="./js/bootstrap-modal.js"></script>
     <script src="./js/bootstrap-typeahead.js"></script>
+    <script src="./js/bootstrap-button.js"></script>
     <script src="./js/application.js"></script>
     <script src="./js/ICanHaz.min.js"></script>
 

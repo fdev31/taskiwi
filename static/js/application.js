@@ -2,9 +2,11 @@ all_tasks = [];
 all_projects = [];
 rev_sel = {};
 
-function filter_tasks() {
-    var proj = $('#new_task_project').val().toLowerCase();
-    var descr = $('#new_task_descr').val().toLowerCase();
+function apply_filter(opts) {
+    var opts = opts || {};
+    var proj = (opts.proj || '').toLowerCase();
+    var descr = (opts.descr || '').toLowerCase();
+
     if (!!descr) {
         descr = RegExp('.*'+descr+'.*', 'i');
     }
@@ -13,8 +15,11 @@ function filter_tasks() {
     } else {
         all_tasks.pending.forEach(
             function(o) {
+                var d=rev_sel[o.uuid];
                 if ((proj && (o.project || '').toLowerCase() !== proj) || (descr && !!!o.description.match(descr))) {
-                    rev_sel[o.uuid].fadeOut() ;
+                    d.hide() ;
+                } else {
+                    d.show();
                 }
             }
         );
@@ -105,12 +110,37 @@ function event_task_drop(event, ui) {
 	}, 500);
 };
 
-function sort_tasks(projs) {
+function toggle_done_display() {
+    var dt = $('#done_tasks').parent();
+    if (dt.is(':visible')) {
+        dt.slideUp();
+        $('#pending_tasks').parent().removeClass('span7');
+    } else {
+        dt.slideDown();
+        $('#pending_tasks').parent().addClass('span7');
+    }
+};
+
+_prios = {
+    'L': 1,
+    'M': 3,
+    'H': 5
+};
+
+function sort_tasks(opts) {
+    var opts = opts || {};
+    var groups = opts.save_groups;
+    var only_pending = opts.todo_only;
+
     var sort_by_project = function(a,b) {
+        var rp = (_prios[b.priority] || 2) - (_prios[a.priority] || 2) ;
+        if(rp !== 0)
+            return rp;
         var x = (a.project || '').toUpperCase();
         var y = (b.project || '').toUpperCase();
-        if(!!projs)
-            projs[x] = true;
+        if(!!groups)
+            if(!only_pending || a.status === 'pending')
+                groups[a.project] = true;
         if( x < y) {
             return -1;
         } else if (x === y) {
@@ -144,18 +174,29 @@ function set_focus() {
     $('#new_task_descr').focus();
 };
 
+function rmquot(txt) {
+    return txt.replace(/\\"/g, '"');
+}
+
 $(function() {
     var _tmp = {};
 	$.get('/tasks').success(function(tasks) {
 		all_tasks = tasks; // set global
-        sort_tasks(_tmp);
+        sort_tasks({'save_groups':_tmp, 'todo_only':true});
         for (k in _tmp) {
-            if( !!k ) all_projects.push(k.toLowerCase());
+            if( !!k ) all_projects.push(k);
         }
 
         $('#new_task_project').typeahead({'source': all_projects}); // set projects as completable
 
-		$(tasks.pending).each(function(i,t){t.editable=true;});
+		$(tasks.pending).each(function(i,t){
+            t.editable=true;
+            t.description = rmquot(t.description);
+        });
+		$(tasks.completed).each(function(i,t){
+            t.editable=false;
+            t.description = rmquot(t.description);
+        });
 		ich.tasklist(tasks).appendTo('#mainbody');
 		$('#pending_tasks, #done_tasks').sortable({
 			connectWith: '.connected_tasks',
@@ -166,4 +207,15 @@ $(function() {
         });
 	});
     set_focus();
+
+// http://stackoverflow.com/questions/925334/how-is-the-default-submit-button-on-an-html-form-determined
+ $("form input").keypress(function (e) {
+    if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+        $('input[type=submit]:first').click();
+        return false;
+    } else {
+        return true;
+    }
+    });
+
 });

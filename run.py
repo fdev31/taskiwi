@@ -35,6 +35,10 @@ def cb(pfx):
 def cb(fname):
     return bottle.static_file(fname, root=ROOT+'/static/js/')
 
+@bottle.route('/img/<fname:path>')
+def cb(fname):
+    return bottle.static_file(fname, root=ROOT+'/static/img/')
+
 @bottle.route('/css/<fname:path>')
 def cb(fname):
     return bottle.static_file(fname, root=ROOT+'/static/css/')
