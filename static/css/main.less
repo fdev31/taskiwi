@@ -1,4 +1,41 @@
+@basecolor: #eed;
+@seccolor: #ddc;
 
+.gradient(@c1, @c2) {
+    background: @c1; /* Old browsers */
+    background: -moz-linear-gradient(top, @c1 0%, @c2 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@c1), color-stop(100%,@c2)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, @c1 0%,@c2 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, @c1 0%,@c2 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, @c1 0%,@c2 100%); /* IE10+ */
+    background: linear-gradient(to bottom, @c1 0%,@c2 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@c1', endColorstr='@c2',GradientType=0 ); /* IE6-9 */
+}
+// 1px 4px 0.3
+.shadow(@a, @b,@c) {
+    -webkit-box-shadow:0 @a @b rgba(0, 0, 0, @c), 0 0 @b*10 rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow:0 @a @b rgba(0, 0, 0, 0.3), 0 0 @b*10 rgba(0, 0, 0, 0.1) inset;
+    box-shadow:0 @a @b rgba(0, 0, 0, 0.3), 0 0 @b*10 rgba(0, 0, 0, 0.1) inset;
+}
+
+.task_high {
+    background-color: red;
+}
+
+.nice-gradient() {
+    .gradient(@basecolor, @seccolor);
+    margin-bottom: 3px;
+    margin-top: 3px;
+    padding: .5ex;
+    border: solid 1px transparent;
+    > .btn {
+        display: hidden;
+    }
+    &:hover {
+        .gradient(white, #eee);
+        .shadow(1px, 4px, 0.3);
+    }
+}
 ul > li.task {
 	padding: .5ex;
   border-radius: 5px;
@@ -20,7 +57,9 @@ ul li.task:nth-child(even) {
 }
 */
 
-ul li.task:hover {
-/*	-webkit-transition-duration: 0.3s; */
-	background-color: white; 
+ul li.task {
+    .nice-gradient();
+    &:hover {
+        background-color: white; 
+    }
 }
