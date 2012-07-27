@@ -1,3 +1,11 @@
+/* TODO:
+ *
+ * make a function adapting the tasks
+ * - dates & co (like in edit mode)
+ * - unquot() calls
+ * - editable initial state
+ */
+
 all_tasks = [];
 all_projects = [];
 rev_sel = {};
@@ -114,10 +122,10 @@ function toggle_done_display() {
     var dt = $('#done_tasks').parent();
     if (dt.is(':visible')) {
         dt.slideUp();
-        $('#pending_tasks').parent().removeClass('span7');
+        $('#pending_tasks').parent().removeClass('span7', 500);
     } else {
         dt.slideDown();
-        $('#pending_tasks').parent().addClass('span7');
+        $('#pending_tasks').parent().addClass('span7', 500);
     }
 };
 
