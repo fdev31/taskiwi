@@ -78,14 +78,14 @@
 		  <label>Project <input type="text" id="new_task_project" class="input-medium" data-provide="typeahead"></label>
 		  &nbsp;
 		  <label>Description <input type="text" id="new_task_descr" class="input-xlarge search-query"></label>
-          <button type="submit" onclick="add_new_task($('#new_task_project').val(), $('#new_task_descr').val(), function(){$('#new_task_descr').val(''); set_focus();})" class="btn">Add</button>
+          <button type="submit" onclick="add_new_task($('#new_task_project').val(), $('#new_task_descr').val(), function(){$('#new_task_descr').val(''); set_focus();}); return false;" class="btn">Add</button>
           <button onclick="filter_tasks(); set_focus(); return false;" class="btn">Filter</button>
     </form>
 </div>
 <script id="tasklist" type="text/html">
 <div class="tasklist row-fluid">
 	<div class="well wip span7">
-		<h2>TODO</h2>
+        <h2><a href="#" onclick="$('#pending_tasks').slideToggle()">TODO</a></h2>
 		<ul id="pending_tasks" class="connected_tasks">
 		{{#pending}}
 			{{>taskitem}}
@@ -94,7 +94,7 @@
 	</div>
 
 	<div class="well span5">
-		<h2>DONE</h2>
+        <h2><a href="#" onclick="$('#done_tasks').slideToggle()">DONE</a></h2>
 		<ul id="done_tasks" class="connected_tasks" style="overflow-x: hidden; overflow-y: scroll; height: 50ex;">
 		{{#completed}}
 			{{>taskitem}}

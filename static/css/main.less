@@ -35,6 +35,23 @@
     background-color: red;
 }
 
+ul#done_tasks > li {
+    > a.btn {
+        visibility: hidden;
+    }
+}
+
+ul#pending_tasks > li {
+    > a.btn {
+        visibility: hidden;
+    }
+    &:hover {
+        > a.btn {
+            visibility: visible;
+        }
+    }
+}
+
 .nice-gradient() {
     .gradient(@basecolor, @seccolor);
     margin-bottom: 3px;

@@ -85,7 +85,6 @@ function task_by_uuid(uuid) {
 function event_task_drop(event, ui) {
 	var uuid = ui.item[0].id;
     var target = $(ui.item[0]);
-	$(ui.item[0]).find('.btn').remove();
 	setTimeout(function(){
 		if (event.target.id == "done_tasks") {
 //            alert('Marking ' + uuid + ' task done');
