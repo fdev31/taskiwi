@@ -2,14 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Twitter Bootstrap</title>
+    <title>Taskiss</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="/css/bootstrap.css" rel="stylesheet" />
-    <link href="/css/bootstrap-responsive.css" rel="stylesheet" />
+    <link href="/css/bootstrap.css" rel="stylesheet"  type="text/css"/>
+    <link href="/css/bootstrap-responsive.css" rel="stylesheet"  type="text/css"/>
+    <link href="/css/bootstrap-editable.css" rel="stylesheet"  type="text/css"/>
     <link href="/css/main.less" rel="stylesheet/less" type="text/css" />
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -57,7 +58,18 @@
 		<h3>Edit</h3>
 	  </div>
 	  <div class="modal-body">
-            {{#project}}[ <b>{{project}}</b> ]{{/project}} {{#status}}<span class="pull-right">{{status}}{{#priority}}&nbsp;(prio: {{priority}}){{/priority}}</span>{{/status}}
+          {{#project}}[ <b>{{project}}</b> ]{{/project}}
+          <span class="pull-right">
+
+          {{^priority}}
+              <a class="auto_editable" href="#" data-type="select" data-name="priority" data-pk="{{uuid}}" data-value="{{priority}}" data-source="{'L':'Low', '': 'None', 'M': 'Medium', 'H': 'High',}" data-original-title="Change priority">No priority</a>
+          {{/priority}}
+          {{#priority}}
+              <a class="auto_editable" href="#" data-type="select" data-name="priority" data-pk="{{uuid}}" data-value="{{priority}}" data-source="{'L':'Low', '': 'None', 'M': 'Medium', 'H': 'High',}" data-original-title="Change priority">Priority: {{priority}}</a>
+          {{/priority}}
+
+          </span>
+
 		  <dl class="dl-horizontal">
 
 		    <dt>created on</dt>
@@ -76,7 +88,9 @@
             <hr />
 
 		    <dt>description</dt>
-		    <dd>{{description}}</dd>
+            <dd>
+            <a class="auto_editable" href="#" data-type="text" data-pk="{{uuid}}" data-name="description" data-original-title="Enter new description">{{description}}</a>
+            </dd>
 
             <hr />
 
@@ -86,14 +100,14 @@
             {{/annotations}}
 		  </dl>
 	  </div>
+  </form>
 	  <div class="modal-footer">
 		<a href="#" class="btn" data-dismiss="modal">Close</a>
-		<a href="#" class="btn btn-primary">Save changes</a>
 	  </div>
 	</div>
 </script>
 <div class="row-fluid">
-	<form class="form-search span12 btn-toolbar" action="#">
+    <form class="form-search span12 btn-toolbar" action="#">
         <div class="btn-group control-group">
             <div class="controls">
                 <div class="input-append">
@@ -102,16 +116,18 @@
                 </div>
 
                 <div class="input-append">
-<input title="Type the description of the task here. Can be partial if you'r using the filter action." placeholder="Short or part of the filter" type="text" id="new_task_descr" class="input-xlarge search-query" autofocus>
-          <input type="submit" class="btn" onclick="add_new_task($('#new_task_project').val(), $('#new_task_descr').val(), function(){$('#new_task_descr').val(''); set_focus();}); return false;" title="Add a task with given descripion in the given project (or none)" value="Add"></input>
-          <button onclick="apply_filter({proj: $('#new_task_project').val(), descr: $('#new_task_descr').val()}); set_focus(); return false;" class="btn" title="Hides tasks that aren't matching project and description entries">Filter</button>
-      </div>
-      </div>
-      </div>
-      <div class="btn-group pull-right">
+                    <input title="Type the description of the task here. Can be partial if you'r using the filter action." placeholder="Short description or part of the filter" type="text" id="new_task_descr" class="input-xlarge search-query" autofocus>
+                    <button type="submit" id="add_action" class="btn" onclick="add_new_task($('#new_task_project').val(), $('#new_task_descr').val(), function(){$('#new_task_descr').val(''); set_focus();}); return false;" title="Add a task with given descripion in the given project (or none)" value=""><i class="icon-plus"></i></input>
+                        <button id="filter_action" onclick="apply_filter({proj: $('#new_task_project').val(), descr: $('#new_task_descr').val()}); set_focus(); return false;" class="btn" title="Hides tasks that aren't matching project and description entries"><i class="icon-filter"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group pull-right">
           <button data-toggle="button" title="Toggle DONE tasks visibility" class="btn" onclick="toggle_done_display(); return false;"><i class="icon-eye-close"></i></button>
-          <button title="List everything and reset input" class="btn" onclick="$('#new_task_project').val(''); $('#new_task_descr').val(''); apply_filter(); return false;"><i class="icon-list-alt"></i></button>
+          <button title="List everything and reset input" class="btn" onclick="$('#new_task_project').val(''); $('#new_task_descr').val(''); apply_filter(); set_focus(); return false;"><i class="icon-refresh"></i></button>
       </div>
+
     </form>
 </div>
 <script id="tasklist" type="text/html">
@@ -141,7 +157,7 @@
 		<span class="proj_name"><b>[ {{project}} ]</b></span>
 		{{/project}}
 		{{#editable}}
-		<a class="btn btn-mini pull-right" href="#" onclick="edit_task_popup('{{uuid}}')">edit</a>
+        <a class="btn btn-mini pull-right" href="#" onclick="edit_task_popup('{{uuid}}')"><i class="icon-pencil"></i></a>
 		{{/editable}}
 		&nbsp;
         {{description}}
@@ -161,6 +177,9 @@
     <script src="./js/bootstrap-modal.js"></script>
     <script src="./js/bootstrap-typeahead.js"></script>
     <script src="./js/bootstrap-button.js"></script>
+    <script src="./js/bootstrap-tooltip.js"></script>
+    <script src="./js/bootstrap-popover.js"></script>
+    <script src="./js/bootstrap-editable.js"></script>
     <script src="./js/application.js"></script>
     <script src="./js/ICanHaz.min.js"></script>
 

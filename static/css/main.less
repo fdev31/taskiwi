@@ -1,19 +1,16 @@
-@basecolor: #eed;
+// vim: filetype=scss
+
+@basecolor: #eef;
 @seccolor: #ddc;
+@hicolor: #fed;
+@medcolor: #efe;
+@locolor: #ccc;
 
-.task_priH {
-    color: red;
+.shadow(@a, @b,@c) {
+    -webkit-box-shadow:0 @a @b rgba(0, 0, 0, @c), 0 0 @b*10 rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow:0 @a @b rgba(0, 0, 0, 0.3), 0 0 @b*10 rgba(0, 0, 0, 0.1) inset;
+    box-shadow:0 @a @b rgba(0, 0, 0, 0.3), 0 0 @b*10 rgba(0, 0, 0, 0.1) inset;
 }
-.task_priM {
-    color: green;
-}
-.task_pri {
-    color: black;
-}
-.task_priL {
-    color: #666;
-}
-
 .gradient(@c1, @c2) {
     background: @c1; /* Old browsers */
     background: -moz-linear-gradient(top, @c1 0%, @c2 100%); /* FF3.6+ */
@@ -24,23 +21,54 @@
     background: linear-gradient(to bottom, @c1 0%,@c2 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@c1', endColorstr='@c2',GradientType=0 ); /* IE6-9 */
 }
-// 1px 4px 0.3
-.shadow(@a, @b,@c) {
-    -webkit-box-shadow:0 @a @b rgba(0, 0, 0, @c), 0 0 @b*10 rgba(0, 0, 0, 0.1) inset;
-    -moz-box-shadow:0 @a @b rgba(0, 0, 0, 0.3), 0 0 @b*10 rgba(0, 0, 0, 0.1) inset;
-    box-shadow:0 @a @b rgba(0, 0, 0, 0.3), 0 0 @b*10 rgba(0, 0, 0, 0.1) inset;
+.nice-gradient-box(@col1, @col2) {
+    .gradient(@col1, @col2);
+    margin-bottom: 3px;
+    margin-top: 3px;
+    padding: .5ex;
+    border: solid 1px transparent;
+    &:hover {
+        .gradient(#ffd, white);
+        border: solid 1px white;
+        .shadow(1px, 4px, 0.3);
+    }
 }
-
-.task_high {
-    background-color: red;
+.wip {
+	background-color: #eeeedd;
 }
-
+ul.connected_tasks {
+	padding: 1ex;
+    margin: 0;
+    list-style: none;
+    li.task {
+        padding: .5ex;
+        border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+    li.task_priL {
+        .nice-gradient-box(@locolor, @seccolor);
+    }
+    li.task_pri {
+        .nice-gradient-box(@basecolor, @seccolor);
+    }
+    li.task_priM {
+        .nice-gradient-box(@medcolor, @seccolor);
+    }
+    li.task_priH {
+        .nice-gradient-box(@hicolor, @seccolor);
+    }
+}
+/*
+Show/Hide buttons according to the state
+*/
 ul#done_tasks > li {
     > a.btn {
         visibility: hidden;
     }
 }
-
 ul#pending_tasks > li {
     > a.btn {
         visibility: hidden;
@@ -52,46 +80,9 @@ ul#pending_tasks > li {
     }
 }
 
-.nice-gradient() {
-    .gradient(@basecolor, @seccolor);
-    margin-bottom: 3px;
-    margin-top: 3px;
-    padding: .5ex;
-    border: solid 1px transparent;
-    > .btn {
-        display: hidden;
-    }
-    &:hover {
-        .gradient(white, #eee);
-        .shadow(1px, 4px, 0.3);
-    }
-}
-ul > li.task {
-	padding: .5ex;
-  border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  vertical-align: middle;
-  cursor: pointer;
-}
-ul.connected_tasks {
-	padding: 1ex;
-    margin: 0;
-    list-style: none;
-}
-.wip {
-	background-color: #f5eeee;
-}
 
 /*
 ul li.task:nth-child(even) {
 	background-color: #f5e5e5; 
 }
 */
-
-ul li.task {
-    .nice-gradient();
-    &:hover {
-        background-color: white; 
-    }
-}

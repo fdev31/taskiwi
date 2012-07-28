@@ -4,6 +4,7 @@
  * - dates & co (like in edit mode)
  * - unquot() calls
  * - editable initial state
+ *
  */
 
 all_tasks = [];
@@ -55,7 +56,9 @@ function edit_task_popup(uuid) {
         t.end_date = new Date(t.end*1000);
     if(t.due)
         t.due_date = new Date(t.due*1000);
-	ich.edit_dialog(t).modal();
+	var e = ich.edit_dialog(t);
+    e.find('.auto_editable').editable();
+    e.modal();
 };
 
 function add_new_task(proj, descr, cb) {
@@ -215,15 +218,31 @@ $(function() {
         });
 	});
     set_focus();
+    $.fn.editable.defaults.url = 'edit';
+    $.fn.editable.defaults.success = function(data) {
+        var t = task_by_uuid(data.uuid);
+        for (k in data) {
+            t[k] = data[k];
+        }
+        var o = ich.taskitem(t);
+        rev_sel[t.uuid].replaceWith( o );
+        rev_sel[t.uuid] = o;
+    };
+    $("form input").keypress(function (e) {
+        var t=e.target;
+        console.log(t);
+        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
 
-// http://stackoverflow.com/questions/925334/how-is-the-default-submit-button-on-an-html-form-determined
- $("form input").keypress(function (e) {
-    if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
-        $('input[type=submit]:first').click();
-        return false;
-    } else {
-        return true;
-    }
+            if (t.id === "new_task_project") { // filter groups
+                $('#filter_action').click();
+            } else {
+                $('button[type=submit]:first').click();
+            }
+
+            return false;
+        } else {
+            return true;
+        }
     });
 
 });
