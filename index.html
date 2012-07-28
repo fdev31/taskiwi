@@ -58,7 +58,11 @@
 		<h3>Edit</h3>
 	  </div>
 	  <div class="modal-body">
-          {{#project}}[ <b>{{project}}</b> ]{{/project}}
+
+          [<b>
+              <a class="auto_editable" href="#" data-type="text" data-pk="{{uuid}}" data-emptytext="No project" data-name="project" data-original-title="Enter project name">{{project}}</a>
+          </b>]
+
           <span class="pull-right">
 
           {{^priority}}
