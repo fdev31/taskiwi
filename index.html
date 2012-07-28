@@ -93,18 +93,25 @@
 	</div>
 </script>
 <div class="row-fluid">
-	<form class="form-search span12 well-small" action="#">
-		  <label title="Optional project of the task">Project <input placeholder="Project name (optional)" type="text" id="new_task_project" class="input-medium" data-provide="typeahead"></label>
-          <button title="Filter projects in a list" class="btn btn-small" onclick="ich.proj_list_dialog({'projects': all_projects}).modal();
-return false;"><i class="icon-search"></i></button>
-		  &nbsp;
-		  <label title="Type the description of the task here. Can be partial if you'r using the filter action.">Description <input placeholder="Short title or part of the filter" type="text" id="new_task_descr" class="input-xlarge search-query" autofocus></label>
+	<form class="form-search span12 btn-toolbar" action="#">
+        <div class="btn-group control-group">
+            <div class="controls">
+                <div class="input-append">
+                    <input title="Optional project of the task" placeholder="Project name (optional)" type="text" id="new_task_project" class="input-medium" data-provide="typeahead">
+                    <button title="Filter projects in a list" class="btn btn" onclick="ich.proj_list_dialog({'projects': all_projects}).modal();return false;"><i class="icon-search"></i></button>
+                </div>
 
+                <div class="input-append">
+<input title="Type the description of the task here. Can be partial if you'r using the filter action." placeholder="Short or part of the filter" type="text" id="new_task_descr" class="input-xlarge search-query" autofocus>
           <input type="submit" class="btn" onclick="add_new_task($('#new_task_project').val(), $('#new_task_descr').val(), function(){$('#new_task_descr').val(''); set_focus();}); return false;" title="Add a task with given descripion in the given project (or none)" value="Add"></input>
           <button onclick="apply_filter({proj: $('#new_task_project').val(), descr: $('#new_task_descr').val()}); set_focus(); return false;" class="btn" title="Hides tasks that aren't matching project and description entries">Filter</button>
-
-          <button data-toggle="button" title="Toggle DONE tasks visibility" class="btn pull-right" onclick="toggle_done_display(); return false;"><i class="icon-eye-close"></i></button>
-          <button title="List everything and reset input" class="btn pull-right" onclick="$('#new_task_project').val(''); $('#new_task_descr').val(''); apply_filter(); return false;"><i class="icon-list-alt"></i></button>
+      </div>
+      </div>
+      </div>
+      <div class="btn-group pull-right">
+          <button data-toggle="button" title="Toggle DONE tasks visibility" class="btn" onclick="toggle_done_display(); return false;"><i class="icon-eye-close"></i></button>
+          <button title="List everything and reset input" class="btn" onclick="$('#new_task_project').val(''); $('#new_task_descr').val(''); apply_filter(); return false;"><i class="icon-list-alt"></i></button>
+      </div>
     </form>
 </div>
 <script id="tasklist" type="text/html">
