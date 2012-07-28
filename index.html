@@ -64,13 +64,8 @@
           </b>]
 
           <span class="pull-right">
-
-          {{^priority}}
-              <a class="auto_editable" href="#" data-type="select" data-name="priority" data-pk="{{uuid}}" data-value="{{priority}}" data-source="{'L':'Low', '': 'None', 'M': 'Medium', 'H': 'High',}" data-original-title="Change priority">No priority</a>
-          {{/priority}}
-          {{#priority}}
-              <a class="auto_editable" href="#" data-type="select" data-name="priority" data-pk="{{uuid}}" data-value="{{priority}}" data-source="{'L':'Low', '': 'None', 'M': 'Medium', 'H': 'High',}" data-original-title="Change priority">Priority: {{priority}}</a>
-          {{/priority}}
+              Priority:
+              <a class="auto_editable" href="#" data-type="select" data-name="priority" data-pk="{{uuid}}" data-value="{{priority}}" data-source="{'L':'Low', '': 'None', 'M': 'Medium', 'H': 'High',}" data-original-title="Change priority" data-emptytext="None">{{priority}}</a>
 
           </span>
 
