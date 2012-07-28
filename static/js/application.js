@@ -230,7 +230,6 @@ $(function() {
     };
     $("form input").keypress(function (e) {
         var t=e.target;
-        console.log(t);
         if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
 
             if (t.id === "new_task_project") { // filter groups
