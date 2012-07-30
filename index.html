@@ -79,6 +79,11 @@
 		    <dd>{{due_date}}</dd>
             {{/due_date}}
 
+            {{#start_date}}
+		    <dt>started on</dt>
+		    <dd>{{start_date}}</dd>
+            {{/start_date}}
+
             {{#end_date}}
 		    <dt>finished on</dt>
 		    <dd>{{end_date}}</dd>
@@ -105,30 +110,7 @@
 	  </div>
 	</div>
 </script>
-<div class="row-fluid">
-    <form class="form-search span12 btn-toolbar" action="#">
-        <div class="btn-group control-group">
-            <div class="controls">
-                <div class="input-append">
-                    <input title="Optional project of the task" placeholder="Project name (optional)" type="text" id="new_task_project" class="input-medium" data-provide="typeahead">
-                    <button title="Filter projects in a list" class="btn btn" onclick="ich.proj_list_dialog({'projects': all_projects}).modal();return false;"><i class="icon-search"></i></button>
-                </div>
 
-                <div class="input-append">
-                    <input title="Type the description of the task here. Can be partial if you'r using the filter action." placeholder="Short description or part of the filter" type="text" id="new_task_descr" class="input-xlarge search-query" autofocus>
-                    <button type="submit" id="add_action" class="btn" onclick="add_new_task($('#new_task_project').val(), $('#new_task_descr').val(), function(){$('#new_task_descr').val(''); set_focus();}); return false;" title="Add a task with given descripion in the given project (or none)" value=""><i class="icon-plus"></i></input>
-                        <button id="filter_action" onclick="apply_filter({proj: $('#new_task_project').val(), descr: $('#new_task_descr').val()}); set_focus(); return false;" class="btn" title="Hides tasks that aren't matching project and description entries"><i class="icon-filter"></i></button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="btn-group pull-right">
-          <button data-toggle="button" title="Toggle DONE tasks visibility" class="btn" onclick="toggle_done_display(); return false;"><i class="icon-eye-close"></i></button>
-          <button title="List everything and reset input" class="btn" onclick="$('#new_task_project').val(''); $('#new_task_descr').val(''); apply_filter(); set_focus(); return false;"><i class="icon-refresh"></i></button>
-      </div>
-
-    </form>
-</div>
 <script id="tasklist" type="text/html">
 <div class="tasklist row-fluid">
 	<div class="well wip span7">
@@ -151,7 +133,10 @@
 </div>
 </script>
 
-<script id="taskitem" type="text/html"><li class="dragdrop-draggable dragdrop-handle task task_{{status}} task_pri{{priority}}" id="{{uuid}}">
+<script id="taskitem" type="text/html"><li class="dragdrop-draggable {{#start}}task_running {{/start}}dragdrop-handle task task_{{status}} task_pri{{priority}}"
+	{{#due}}title="due for {{due_date}}"{{/due}}
+	{{^due}}title="created on {{date}}"{{/due}}
+	id="{{uuid}}">
 		{{#project}}
 		<span class="proj_name"><b>[ {{project}} ]</b></span>
 		{{/project}}
@@ -164,23 +149,57 @@
 
 <!-- /templates -->
 
+<!-- header menu -->
+
+<div class="row-fluid">
+    <form class="form-search span12 btn-toolbar" action="#">
+        <div class="btn-group control-group">
+            <div class="controls">
+                &nbsp;
+                <div class="input-append">
+                    <input title="Optional project of the task" placeholder="Project name (optional)" type="text" id="new_task_project" class="input-medium" data-provide="typeahead">
+                    <button title="Filter projects in a list" class="btn btn" onclick="ich.proj_list_dialog({'projects': all_projects}).modal();return false;"><i class="icon-search"></i></button>
+                </div>
+
+                <div class="input-append">
+                    <input title="Type the description of the task here. Can be partial if you'r using the filter action." placeholder="Short description or part of the filter" type="text" id="new_task_descr" class="input-xlarge search-query" autofocus>
+                    <button type="submit" id="add_action" class="btn" onclick="add_new_task($('#new_task_project').val(), $('#new_task_descr').val(), function(){$('#new_task_descr').val(''); set_focus();}); return false;" title="Add a task with given descripion in the given project (or none)" value=""><i class="icon-plus"></i></input>
+                        <button id="filter_action" onclick="apply_filter({proj: $('#new_task_project').val(), descr: $('#new_task_descr').val()}); set_focus(); return false;" class="btn" title="Hides tasks that aren't matching project and description entries"><i class="icon-filter"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group pull-right">
+          &nbsp;
+          <button data-toggle="button" title="Toggle DONE tasks visibility" class="btn" onclick="toggle_done_display(); return false;"><i class="icon-eye-close"></i></button>
+          <button title="List everything and reset input" class="btn" onclick="$('#new_task_project').val(''); $('#new_task_descr').val(''); apply_filter(); set_focus(); return false;"><i class="icon-refresh"></i></button>
+      		&nbsp;
+      	</div>
+
+    </form>
+</div>
+
+<!-- empty body, will be populated by templates from js -->
+
 	<div id="mainbody" class="container-fluid">
     </div><!-- /container -->
 
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="./js/jquery.js"></script>
-    <script src="./js/jquery-ui.min.js"></script>
-    <script src="./js/bootstrap-transition.js"></script>
-    <script src="./js/bootstrap-modal.js"></script>
-    <script src="./js/bootstrap-typeahead.js"></script>
-    <script src="./js/bootstrap-button.js"></script>
-    <script src="./js/bootstrap-tooltip.js"></script>
-    <script src="./js/bootstrap-popover.js"></script>
-    <script src="./js/bootstrap-editable.js"></script>
-    <script src="./js/application.js"></script>
-    <script src="./js/ICanHaz.min.js"></script>
+    <script src="/js/jquery.js"></script>
+    <script src="/js/jquery-ui.min.js"></script>
+    <script src="/js/bootstrap-transition.js"></script>
+    <script src="/js/bootstrap-modal.js"></script>
+    <script src="/js/bootstrap-typeahead.js"></script>
+    <script src="/js/bootstrap-button.js"></script>
+    <script src="/js/bootstrap-tooltip.js"></script>
+    <script src="/js/bootstrap-popover.js"></script>
+    <script src="/js/bootstrap-editable.js"></script>
+    <script src="/js/bootstrap-popover.js"></script>
+    <script src="/js/ICanHaz.min.js"></script>
+    <script src="/js/moment.min.js"></script>
+    <script src="/js/application.js"></script>
 
   </body>
 </html>

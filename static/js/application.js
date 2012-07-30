@@ -41,35 +41,62 @@ function duplicate(d) {
 
 function edit_task_popup(uuid) {
 	var t = duplicate( task_by_uuid(uuid) );
-    var annotations = [];
-    for (k in t) {
-        if (!!k.match(/^annotation_/)) {
-            annotations.push(
-                    {'id': new Date( eval(k.match(/^annotation_(.*)/)[1]) * 1000).toDateString(),
-                        'content': t[k]
-                    });
-        }
-    };
-    t.annotations = annotations;
-	t.date = new Date(t.entry*1000).toDateString();
-    if(t.end)
-        t.end_date = new Date(t.end*1000);
-    if(t.due)
-        t.due_date = new Date(t.due*1000);
 	var e = ich.edit_dialog(t);
     e.find('.auto_editable').editable();
     e.modal();
 };
 
+function format_date(timestamp) {
+	console.log("format",timestamp);
+	var r = moment(new Date(timestamp)).format("DD/M/YYYY");
+	console.log('r=', r);
+	return r;
+};
+
+function prepare(item) {
+    item.editable=true;
+    console.log("prepare", item);
+    item.description = rmquot(item.description);
+    var annotations = [];
+    for (k in item) {
+        if (!!k.match(/^annotation_/)) {
+		    annotations.push(
+	            {'id': format_date(eval(k.match(/^annotation_(.*)/)[1]) * 1000),
+	                'content': item[k]
+	            });
+        }
+    };
+    item.annotations = annotations;
+
+	// creation date
+	if(item.entry)
+		item.date = function() {
+			return format_date(item.entry*1000);
+		};
+	if (item.due)
+    	item.due_date = function() {
+			return format_date(item.due*1000);
+		};
+	if(item.start)
+		item.start_date = function() {
+			return format_date(item.start*1000);
+		};
+	if(item.end)
+		item.end_date = function() {
+			return format_date(item.end*1000);
+		};
+};
+
 function add_new_task(proj, descr, cb) {
     if(!!!descr)
         return;
-    $.post('/tasks', {'project': proj, 'description': descr},
+    $.post('tasks', {'project': proj, 'description': descr},
         function(infos) {
             infos.editable = true;
             if (!!proj)
                 infos.project = proj;
             var ti = ich.taskitem(infos);
+            prepare(infos);
             rev_sel[infos.uuid] = ti;
             ti.appendTo('#pending_tasks');
             ti.hide();
@@ -104,7 +131,7 @@ function event_task_drop(event, ui) {
 	setTimeout(function(){
 		if (event.target.id == "done_tasks") {
 //            alert('Marking ' + uuid + ' task done');
-            $.post('/tasks', {'action': 'remove', 'uuid': uuid} );
+            $.post('tasks', {'action': 'remove', 'uuid': uuid} );
             var t = task_by_uuid(uuid);
             var idx = all_tasks.pending.indexOf(t);
             delete all_tasks.pending[idx];
@@ -149,9 +176,12 @@ function sort_tasks(opts) {
             return rp;
         var x = (a.project || '').toUpperCase();
         var y = (b.project || '').toUpperCase();
-        if(!!groups)
+        if(!!groups) {
             if(!only_pending || a.status === 'pending')
                 groups[a.project] = true;
+            if(!only_pending || b.status === 'pending')
+                groups[b.project] = true;
+        }
         if( x < y) {
             return -1;
         } else if (x === y) {
@@ -191,7 +221,7 @@ function rmquot(txt) {
 
 $(function() {
     var _tmp = {};
-	$.get('/tasks').success(function(tasks) {
+	$.get('tasks').success(function(tasks) {
 		all_tasks = tasks; // set global
         sort_tasks({'save_groups':_tmp, 'todo_only':true});
         for (k in _tmp) {
@@ -201,12 +231,10 @@ $(function() {
         $('#new_task_project').typeahead({'source': all_projects}); // set projects as completable
 
 		$(tasks.pending).each(function(i,t){
-            t.editable=true;
-            t.description = rmquot(t.description);
+			prepare(t);
         });
 		$(tasks.completed).each(function(i,t){
-            t.editable=false;
-            t.description = rmquot(t.description);
+			prepare(t);
         });
 		ich.tasklist(tasks).appendTo('#mainbody');
 		$('#pending_tasks, #done_tasks').sortable({
