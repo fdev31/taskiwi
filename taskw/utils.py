@@ -17,7 +17,7 @@ encode_replacements = OrderedDict([
     ('/', '\\/'),
 ])
 decode_replacements = OrderedDict(
-    [[v, k] for k, v in encode_replacements.items()]
+    [[v, k] for k, v in encode_replacements.items() if k != '\n']
 )
 
 
