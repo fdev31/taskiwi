@@ -4,7 +4,7 @@ import bottle
 import taskw
 import os
 
-ROOT=os.path.curdir
+conf = {'root':os.path.curdir, 'databases': '/tmp/'}
 
 w = taskw.TaskWarrior()
 
@@ -12,16 +12,17 @@ warriors = {}
 
 def getmakeroot(tid):
     if tid not in warriors:
-        rcfile = '/tmp/'+tid+'.rc'
+        db = conf['databases']
+        rcfile = db+tid+'.rc'
         if not os.path.exists(rcfile):
             try:
-                os.mkdir('/tmp/'+tid)
+                os.mkdir(db+tid)
             except OSError:
                 pass
-            open(rcfile, 'w').write('data.location=/tmp/'+tid+'\n')
-            open('/tmp/%s/completed.data'%tid, 'w').write('')
-            open('/tmp/%s/pending.data'%tid, 'w').write('')
-        warriors[tid] = taskw.TaskWarrior('/tmp/'+tid+'.rc')
+            open(rcfile, 'w').write('data.location='+db+tid+'\n')
+            open('%s/%s/completed.data'%(db,tid), 'w').write('')
+            open('%s/%s/pending.data'%(db,tid), 'w').write('')
+        warriors[tid] = taskw.TaskWarrior(db+tid+'.rc')
     return warriors[tid]
 
 
@@ -30,7 +31,7 @@ def decode(txt):
 
 @bottle.route('/<tid>/')
 def cb(tid):
-    return bottle.static_file('index.html', root=ROOT)
+    return bottle.static_file('index.html', root=conf['root'])
 
 @bottle.route('/<tid>/tasks', method=['GET', 'POST'])
 def cb(tid):
@@ -54,6 +55,13 @@ def cb(tid):
     task = {'uuid': params.pk, params.name: params.value}
     i, t = w.task_update(task)
     return t
+
+@bottle.route('/tasklists')
+def cb():
+    return {n:n.title() for n in os.listdir(conf['databases'])
+        if os.path.exists( os.path.join(conf['databases'], n+'.rc'))}
+
+    return  {'one':'One', 'two': 'Two', 'three': 'Three'}
 
 @bottle.route('/tasks', method=['GET', 'POST'])
 def cb():
@@ -80,23 +88,23 @@ def cb():
 
 @bottle.route('/')
 def cb():
-    return bottle.static_file('index.html', root=ROOT)
+    return bottle.static_file('index.html', root=conf['root'])
 
 @bottle.route('<pfx:re:.*>/favicon.ico')
 def cb(pfx):
-    return bottle.static_file('favicon.ico', root=ROOT+'/static/')
+    return bottle.static_file('favicon.ico', root=conf['root']+'/static/')
 
 @bottle.route('/js/<fname:path>')
 def cb(fname):
-    return bottle.static_file(fname, root=ROOT+'/static/js/')
+    return bottle.static_file(fname, root=conf['root']+'/static/js/')
 
 @bottle.route('/img/<fname:path>')
 def cb(fname):
-    return bottle.static_file(fname, root=ROOT+'/static/img/')
+    return bottle.static_file(fname, root=conf['root']+'/static/img/')
 
 @bottle.route('/css/<fname:path>')
 def cb(fname):
-    return bottle.static_file(fname, root=ROOT+'/static/css/')
+    return bottle.static_file(fname, root=conf['root']+'/static/css/')
 
 if __name__ == "__main__":
     bottle.debug(True)

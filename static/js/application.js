@@ -42,20 +42,17 @@ function duplicate(d) {
 function edit_task_popup(uuid) {
 	var t = duplicate( task_by_uuid(uuid) );
 	var e = ich.edit_dialog(t);
-    e.find('.auto_editable').editable();
+	inject_hooks(e);
     e.modal();
 };
 
 function format_date(timestamp) {
-	console.log("format",timestamp);
 	var r = moment(new Date(timestamp)).format("DD/M/YYYY");
-	console.log('r=', r);
 	return r;
 };
 
 function prepare(item) {
     item.editable=true;
-    console.log("prepare", item);
     item.description = rmquot(item.description);
     var annotations = [];
     for (k in item) {
@@ -217,10 +214,37 @@ function set_focus() {
 
 function rmquot(txt) {
     return txt.replace(/\\"/g, '"');
-}
+};
 
-$(function() {
+function render(tpl_name, opts) {
+	var tpl = ich[tpl_name](opts);
+	inject_hooks(tpl);
+	return tpl;
+};
+
+function inject_hooks(dom_elt) {
+	console.log('infecting', dom_elt);
+	dom_elt.find('.auto_editable').editable();
+    dom_elt.find("form input").keypress(function (e) {
+        var t = e.target;
+        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+
+            if (t.id === "new_task_project") { // filter groups
+                $('#filter_action').click();
+            } else {
+                $('button[type=submit]:first').click();
+            }
+
+            return false;
+        } else {
+            return true;
+        }
+    });
+};
+
+function load_tasks() {
     var _tmp = {};
+    $('#mainbody').html('');
 	$.get('tasks').success(function(tasks) {
 		all_tasks = tasks; // set global
         sort_tasks({'save_groups':_tmp, 'todo_only':true});
@@ -236,7 +260,8 @@ $(function() {
 		$(tasks.completed).each(function(i,t){
 			prepare(t);
         });
-		ich.tasklist(tasks).appendTo('#mainbody');
+        render('tasklist', tasks)
+			.appendTo('#mainbody');
 		$('#pending_tasks, #done_tasks').sortable({
 			connectWith: '.connected_tasks',
 		   receive: event_task_drop
@@ -245,31 +270,38 @@ $(function() {
             rev_sel[o.id] = $(o);
         });
 	});
-    set_focus();
     $.fn.editable.defaults.url = 'edit';
     $.fn.editable.defaults.success = function(data) {
         var t = task_by_uuid(data.uuid);
         for (k in data) {
             t[k] = data[k];
         }
-        var o = ich.taskitem(t);
+        var o = render('taskitem', t);
         rev_sel[t.uuid].replaceWith( o );
         rev_sel[t.uuid] = o;
     };
-    $("form input").keypress(function (e) {
-        var t=e.target;
-        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+    set_focus();
+};
 
-            if (t.id === "new_task_project") { // filter groups
-                $('#filter_action').click();
-            } else {
-                $('button[type=submit]:first').click();
-            }
+function select_project(opts) {
+	
+	window.location.href = "/"+opts.value+"/?logged";
+	/*
+	$('.modal').modal('hide');
+	$('.auto_editable').editable('hide');
+	$('.form-search input').attr('disabled', false);
+	$('.form-search button').attr('disabled', false);
+	*/
+};
 
-            return false;
-        } else {
-            return true;
-        }
-    });
-
+$(function() {
+	if (window.location.href.match(RegExp('.*\?logged$'))) {
+		load_tasks();
+		$('#mainbody').show();
+	} else {
+		$('.form-search input').attr('disabled', true);
+		$('.form-search button').attr('disabled', true)
+		$('#mainbody').show();
+	}
+	inject_hooks($('body'));
 });
