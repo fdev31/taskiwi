@@ -285,7 +285,7 @@ function load_tasks() {
 
 function select_project(opts) {
 	
-	window.location.href = "/"+opts.value+"/?logged";
+	window.location.href = "/"+opts.value+"/#";
 	/*
 	$('.modal').modal('hide');
 	$('.auto_editable').editable('hide');
@@ -295,7 +295,7 @@ function select_project(opts) {
 };
 
 $(function() {
-	if (window.location.href.match(RegExp('.*\?logged$'))) {
+	if (window.location.href.match(RegExp('.*/#$'))) {
 		load_tasks();
 		$('#mainbody').show();
 	} else {
