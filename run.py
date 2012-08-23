@@ -3,8 +3,8 @@
 import bottle
 import taskw
 import os
-
-conf = {'root':os.path.curdir, 'databases': '/tmp/'}
+from .config import _ConfigObj
+conf = _ConfigObj()
 
 w = taskw.TaskWarrior()
 
