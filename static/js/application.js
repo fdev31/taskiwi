@@ -304,6 +304,15 @@ $(function() {
         /* show tasks */
 		load_tasks();
 		$('#mainbody').show();
+        $('body').keydown( function(e) {
+            if(!!e.altKey) {
+               if(e.which === 74) {
+                    set_focus();
+                } else if (e.which === 80) {
+                    $('#new_task_project').focus();
+                }
+            }
+        });
 	} else {
         /* show tasks-list */
 		$('.form-search input').attr('disabled', true);
