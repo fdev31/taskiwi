@@ -102,6 +102,7 @@ function add_new_task(proj, descr, cb) {
             }
             all_tasks.pending.push(infos);
             sort_tasks();
+            inject_hooks(ti);
             ti.fadeIn(2000);
             if(!!cb) cb();
         });
@@ -225,6 +226,8 @@ function render(tpl_name, opts) {
 function inject_hooks(dom_elt) {
 	console.log('infecting', dom_elt);
 	dom_elt.find('.auto_editable').editable();
+
+    // FIXME: a little too agressive:
     dom_elt.find("form input").keypress(function (e) {
         var t = e.target;
         if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
