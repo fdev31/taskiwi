@@ -71,8 +71,21 @@ ul#done_tasks > li {
     > a.btn {
         visibility: hidden;
     }
+    > a.auto_editable {
+        visibility: hidden;
+        float: right;
+    }
+    > span.description {
+        visibility: visible;
+    }
 }
 ul#pending_tasks > li {
+    > a.auto_editable {
+        visibility: visible;
+    }
+    > span.description {
+        visibility: hidden;
+    }
     > a.btn {
         visibility: hidden;
     }

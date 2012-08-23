@@ -128,6 +128,8 @@ function event_task_drop(event, ui) {
     var target = $(ui.item[0]);
 	setTimeout(function(){
 		if (event.target.id == "done_tasks") {
+            target.removeClass('task_pending');
+            target.addClass('task_completed');
 //            alert('Marking ' + uuid + ' task done');
             $.post('tasks', {'action': 'remove', 'uuid': uuid} );
             var t = task_by_uuid(uuid);
@@ -299,9 +301,11 @@ function select_project(opts) {
 
 $(function() {
 	if (window.location.href.match(RegExp('.*/#$'))) {
+        /* show tasks */
 		load_tasks();
 		$('#mainbody').show();
 	} else {
+        /* show tasks-list */
 		$('.form-search input').attr('disabled', true);
 		$('.form-search button').attr('disabled', true)
 		$('#mainbody').show();
