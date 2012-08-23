@@ -76,7 +76,7 @@
           if(!this.$element.data('popover')) { // for the first time render popover and show
               this.$element.popover({
                   trigger: 'manual',
-                  placement: 'top',
+                  placement: this.settings.placement,
                   content: this.settings.loading,
                   template: '<div class="popover"><div class="arrow"></div><div class="popover-inner '+this.settings.popoverClass+'"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
               }); 
@@ -300,6 +300,7 @@
                        '</div>'+
                   '</form>',
     loading: '<div class="editable-loading"></div>',    
+    placement: 'top',
     // render function should put jQuery object of input in this.$input and call this.endShow()
     render: function() {                  
         this.$input = $(this.settings.template);
@@ -459,4 +460,4 @@ function setCursorPosition(pos) {
     
   
 }( window.jQuery );  
-    
+
