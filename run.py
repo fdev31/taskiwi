@@ -3,7 +3,11 @@
 import bottle
 import taskw
 import os
-from .config import _ConfigObj
+try:
+    from .config import _ConfigObj
+except (ValueError, SystemError):
+    from config import _ConfigObj
+
 conf = _ConfigObj()
 
 w = taskw.TaskWarrior()
@@ -108,5 +112,5 @@ def cb(fname):
 
 if __name__ == "__main__":
     bottle.debug(True)
-    bottle.run(host='127.0.0.1', port=8888)
+    bottle.run(host='0.0.0.0', port=8888)
 

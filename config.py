@@ -1,4 +1,8 @@
-import ConfigParser
+try:
+    from configparser import ConfigParser
+except ImportError: # py2
+    from ConfigParser import ConfigParser
+from time import time
 import os
 
 defaults_dict = {'root':os.path.curdir, 'databases': '/tmp/'}
@@ -7,7 +11,7 @@ config_filename = 'taskw.ini'
 class _ConfigObj(object):
     """ Configuration object """
 
-    _cfg = ConfigParser.ConfigParser(defaults_dict)
+    _cfg = ConfigParser(defaults_dict)
 
     def _refresh(self):
         t = int(time()+0.5)
@@ -27,7 +31,7 @@ class _ConfigObj(object):
         try:
             self._refresh()
         except OSError:
-            self._cfg.write(file(config_filename, 'w'))
+            self._cfg.write(open(config_filename, 'w'))
 
     def __setattr__(self, name, val):
         if name in ('_lastcheck', '_mtime'):
@@ -39,7 +43,7 @@ class _ConfigObj(object):
             val = ''
 
         val = self._cfg.set('DEFAULT', name, val)
-        config._cfg.write(file(config_filename, 'w'))
+        config._cfg.write(open(config_filename, 'w'))
         return val
 
     def __getattr__(self, name):
