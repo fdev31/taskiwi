@@ -1,4 +1,8 @@
-import ConfigParser
+try:
+    from configparser import ConfigParser
+except ImportError: # py2
+    from ConfigParser import ConfigParser
+from time import time
 import os
 
 defaults_dict = {'root':os.path.curdir, 'databases': '/tmp/'}
@@ -7,7 +11,7 @@ config_filename = 'taskw.ini'
 class _ConfigObj(object):
     """ Configuration object """
 
-    _cfg = ConfigParser.ConfigParser(defaults_dict)
+    _cfg = ConfigParser(defaults_dict)
 
     def _refresh(self):
         t = int(time()+0.5)
