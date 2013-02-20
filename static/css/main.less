@@ -6,6 +6,13 @@
 @medcolor: #efe;
 @locolor: #ccc;
 
+.animated() {
+    -webkit-transition-duration: 1000ms;
+    transition-duration: 1000ms;
+    -webkit-transition-property: background-color, border, opacity;
+    transition-property:  background-color, border, opacity;
+}
+
 .shadow(@a, @b,@c) {
     -webkit-box-shadow:0 @a @b rgba(0, 0, 0, @c), 0 0 @b*10 rgba(0, 0, 0, 0.1) inset;
     -moz-box-shadow:0 @a @b rgba(0, 0, 0, 0.3), 0 0 @b*10 rgba(0, 0, 0, 0.1) inset;
@@ -80,18 +87,23 @@ ul#done_tasks > li {
     }
 }
 ul#pending_tasks > li {
+    .animated();
     > a.auto_editable {
-        visibility: visible;
+        opacity: 1.0;
+        .animated();
     }
     > span.description {
-        visibility: hidden;
+        opacity: 0;
+        .animated();
     }
     > a.btn {
-        visibility: hidden;
+        opacity: 0;
+        .animated();
     }
     &:hover {
         > a.btn {
-            visibility: visible;
+            opacity: 1.0;
+            .animated();
         }
     }
 }

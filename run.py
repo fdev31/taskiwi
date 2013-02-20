@@ -69,29 +69,7 @@ def cb(tid):
 def cb():
     return {n:n.title() for n in os.listdir(conf['databases'])
         if os.path.exists( os.path.join(conf['databases'], n+'.rc'))}
-
-    return  {'one':'One', 'two': 'Two', 'three': 'Three'}
-
-@bottle.route('/tasks', method=['GET', 'POST'])
-def cb():
-    if bottle.request.method == 'GET':
-        # fetch
-        return w.load_tasks()
-    else:
-        if bottle.request.POST.get('action') == 'remove':
-            # delete
-            return w.task_done(uuid=bottle.request.params['uuid'])
-        else:
-            # new (shouldn't it be valid utf-8 already ??)
-            d = {k: decode(v) for k,v in bottle.request.POST.items()}
-            return w.task_add(**d)
-
-@bottle.route('/edit', method='POST')
-def cb():
-    params = bottle.request.POST
-    task = {'uuid': params.pk, params.name: params.value}
-    i, t = w.task_update(task)
-    return t
+    return  {'default':'Default'}
 
 # static files
 

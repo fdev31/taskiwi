@@ -52,7 +52,7 @@ function format_date(timestamp) {
 };
 
 function prepare(item) {
-    item.editable=true;
+    item.editable = true;
     item.description = rmquot(item.description);
     var annotations = [];
     for (k in item) {
