@@ -5,7 +5,7 @@ except ImportError: # py2
 from time import time
 import os
 
-defaults_dict = {'root':os.path.curdir, 'databases': '/tmp/'}
+defaults_dict = {'root': os.path.curdir, 'databases': '/tmp/'}
 config_filename = 'taskw.ini'
 
 class _ConfigObj(object):
