@@ -39,6 +39,36 @@ function duplicate(d) {
     return $.extend({}, d);
 };
 
+function update_item(data) {
+    var t = task_by_uuid(data.uuid);
+    for (k in data) {
+        t[k] = data[k];
+    }
+    prepare(t);
+    var o = render('taskitem', t);
+    rev_sel[t.uuid].replaceWith( o );
+    rev_sel[t.uuid] = o;
+};
+
+function start_task(uuid) {
+    var t = task_by_uuid(uuid);
+    var icon = rev_sel[uuid].find('i.start_stop');
+    var val;
+    if (!!t.start) { // already started
+        val = '';
+        icon.addClass('icon-play');
+        icon.removeClass('icon-pause');
+    } else {
+        val = new Date().getTime()/1000;
+        icon.removeClass('icon-play');
+        icon.addClass('icon-pause');
+    }
+    $.post('./edit', {'pk': uuid, 'name': 'start', 'value': val})
+        .success( update_item );
+    // TODO: handle icon change
+    // TODO: refresh item
+};
+
 function edit_task_popup(uuid) {
 	var t = duplicate( task_by_uuid(uuid) );
 	var e = ich.edit_dialog(t);
@@ -278,16 +308,7 @@ function load_tasks() {
 	});
     // bind automatic URL edition
     $.fn.editable.defaults.url = 'edit';
-    $.fn.editable.defaults.success = function(data) {
-        var t = task_by_uuid(data.uuid);
-        for (k in data) {
-            t[k] = data[k];
-        }
-        prepare(t);
-        var o = render('taskitem', t);
-        rev_sel[t.uuid].replaceWith( o );
-        rev_sel[t.uuid] = o;
-    };
+    $.fn.editable.defaults.success = update_item;
     set_focus();
 };
 
