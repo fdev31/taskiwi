@@ -216,7 +216,7 @@ function set_focus() {
 };
 
 function rmquot(txt) {
-    return txt.replace(/\\"/g, '"');
+    return txt.replace(/\\"/g, '"').replace(/\[\\n\]/g, '<br/>');
 };
 
 function render(tpl_name, opts) {
@@ -281,6 +281,7 @@ function load_tasks() {
         for (k in data) {
             t[k] = data[k];
         }
+        prepare(t);
         var o = render('taskitem', t);
         rev_sel[t.uuid].replaceWith( o );
         rev_sel[t.uuid] = o;

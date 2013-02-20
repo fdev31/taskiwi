@@ -56,9 +56,14 @@ def cb(tid):
 def cb(tid):
     w = getmakeroot(tid)
     params = bottle.request.POST
-    task = {'uuid': params.pk, params.name: params.value}
+    task = {
+            'uuid': params.pk,
+            params.name: params.value.replace('\n', r'[\n]') if params.name == 'description' else params.value
+            }
     i, t = w.task_update(task)
     return t
+
+# get list of task list ;)
 
 @bottle.route('/tasklists')
 def cb():
