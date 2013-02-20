@@ -89,13 +89,20 @@ class TaskWarrior(object):
 
         return d
 
-    def task_add(self, description, **kw):
+    def task_add(self, description, tags=None, **kw):
         """ Add a new task.
 
         Takes any of the keywords allowed by taskwarrior like proj or prior.
         """
         task = {"description": description}
+        if tags != None:
+            task['tags'] = tags
+
         task.update(kw)
+
+        # Only UNIX timestamps are currently supported.
+        if 'due' in kw:
+            task['due'] = str(task['due'])
 
         task['status'] = 'pending'
 
@@ -112,12 +119,13 @@ class TaskWarrior(object):
         return task
 
     def get_task(self, **kw):
-        valid_keys = ['id', 'uuid', 'description']
+        valid_keys = set(['id', 'uuid', 'description'])
+        id_keys = valid_keys.intersection(kw.keys())
 
-        if len(kw) != 1:
-            raise KeyError("get_task must receive one keyword argument")
+        if len(id_keys) != 1:
+            raise KeyError("get_task must receive one ID keyword argument")
 
-        key = list(kw.keys())[0]
+        key = list(id_keys)[0]
         if key not in valid_keys:
             raise KeyError("Argument must be one of %r" % valid_keys)
 
@@ -145,11 +153,16 @@ class TaskWarrior(object):
 
         return id, task
 
+    def filter_by(self, func):
+        tasks = self.load_tasks()
+        filtered = filter(func, tasks)
+        return filtered
+
     def task_done(self, **kw):
         id, task = self.get_task(**kw)
 
         task['status'] = 'completed'
-        task['end'] = str(int(time.time()))
+        task['end'] = kw.get('end') or str(int(time.time()))
 
         self._task_add(task, 'completed')
         self._task_remove(id, 'pending')
