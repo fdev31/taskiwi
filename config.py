@@ -31,7 +31,7 @@ class _ConfigObj(object):
         try:
             self._refresh()
         except OSError:
-            self._cfg.write(file(config_filename, 'w'))
+            self._cfg.write(open(config_filename, 'w'))
 
     def __setattr__(self, name, val):
         if name in ('_lastcheck', '_mtime'):
@@ -43,7 +43,7 @@ class _ConfigObj(object):
             val = ''
 
         val = self._cfg.set('DEFAULT', name, val)
-        config._cfg.write(file(config_filename, 'w'))
+        config._cfg.write(open(config_filename, 'w'))
         return val
 
     def __getattr__(self, name):
