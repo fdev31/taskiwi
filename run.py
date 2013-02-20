@@ -5,7 +5,7 @@ import taskw
 import os
 try:
     from .config import _ConfigObj
-except ValueError:
+except (ValueError, SystemError):
     from config import _ConfigObj
 
 conf = _ConfigObj()
