@@ -170,10 +170,11 @@ function sort_tasks(opts) {
     var groups = opts.save_groups;
     var only_pending = opts.todo_only;
 
-    var sort_by_project = function(a,b) {
+    var sort_by_project = function(a, b) {
         var rp = (_prios[b.priority] || 2) - (_prios[a.priority] || 2) ;
         if(rp !== 0)
             return rp;
+
         var x = (a.project || '').toUpperCase();
         var y = (b.project || '').toUpperCase();
         if(!!groups) {
@@ -182,7 +183,7 @@ function sort_tasks(opts) {
             if(!only_pending || b.status === 'pending')
                 groups[b.project] = true;
         }
-        if( x < y) {
+        if(x < y) {
             return -1;
         } else if (x === y) {
             if (x.description < y.description) {
@@ -275,6 +276,7 @@ function load_tasks() {
             rev_sel[o.id] = $(o);
         });
 	});
+    // bind automatic URL edition
     $.fn.editable.defaults.url = 'edit';
     $.fn.editable.defaults.success = function(data) {
         var t = task_by_uuid(data.uuid);
