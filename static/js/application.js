@@ -9,29 +9,32 @@
 
 all_tasks = [];
 all_projects = [];
-rev_sel = {};
 
 function apply_filter(opts) {
     var opts = opts || {};
     var proj = (opts.proj || '').toLowerCase();
     var descr = (opts.descr || '').toLowerCase();
+    var done_delay = 50; // ms
 
     if (!!descr) {
         descr = RegExp('.*'+descr+'.*', 'i');
     }
     if (!!!descr && !!!proj) {
-        all_tasks.pending.forEach( function(o) { rev_sel[o.uuid].fadeIn(); } );
+        var fade_all_in = function(o) { task_by_uuid(o.uuid).widget.fadeIn(); };
+        all_tasks.pending.forEach( fade_all_in );
+        setTimeout( function() { all_tasks.completed.forEach(fade_all_in) }, done_delay);
     } else {
-        all_tasks.pending.forEach(
-            function(o) {
-                var d=rev_sel[o.uuid];
-                if ((proj && (o.project || '').toLowerCase() !== proj) || (descr && !!!o.description.match(descr))) {
-                    d.hide() ;
-                } else {
-                    d.show();
-                }
+        var exec_filter = function(o) {
+            var d = task_by_uuid(o.uuid).widget;
+            console.log(d);
+            if ((proj && (o.project || '').toLowerCase() !== proj) || (descr && !!!o.description.match(descr))) {
+                d.hide() ;
+            } else {
+                d.show();
             }
-        );
+        }
+        all_tasks.pending.forEach( exec_filter );
+        setTimeout( function() { all_tasks.completed.forEach(exec_filter) }, done_delay);
     }
 };
 
@@ -46,13 +49,13 @@ function update_item(data) {
     }
     prepare(t);
     var o = render('taskitem', t);
-    rev_sel[t.uuid].replaceWith( o );
-    rev_sel[t.uuid] = o;
+    t.widget.replaceWith(o);
+    t.widget = o;
 };
 
 function start_task(uuid) {
     var t = task_by_uuid(uuid);
-    var icon = rev_sel[uuid].find('i.start_stop');
+    var icon = t.widget.find('i.start_stop');
     var val;
     if (!!t.start) { // already started
         val = '';
@@ -124,7 +127,7 @@ function add_new_task(proj, descr, cb) {
                 infos.project = proj;
             var ti = ich.taskitem(infos);
             prepare(infos);
-            rev_sel[infos.uuid] = ti;
+            infos.widget = ti;
             ti.appendTo('#pending_tasks');
             ti.hide();
             if ( all_projects.indexOf(proj) === -1 ) {
@@ -233,9 +236,10 @@ function sort_tasks(opts) {
     // don't redraw if initial state
     var pt = $('#pending_tasks');
     if( pt.length != 0) {
-        pt.find('li').each( function(i,o) { var o= $(o).detach(); rev_sel[$(o).attr('id')] = o; } );
+        // XXX: useless ??
+        pt.find('li').each( function(i,o) { var o= $(o).detach(); task_by_uuid($(o).attr('id')).widget = o; } );
         all_tasks['pending'].forEach( function(o) {
-            rev_sel[o.uuid].appendTo(pt);
+            task_by_uuid(o.uuid).widget.appendTo(pt);
         });
     }
 };
@@ -256,6 +260,14 @@ function render(tpl_name, opts) {
 	return tpl;
 };
 
+function reset_main_display() {
+    $('#new_task_project').val('');
+    $('#new_task_descr').val('');
+    apply_filter();
+    set_focus();
+    return false;
+}
+
 function inject_hooks(dom_elt) {
 	console.log('infecting', dom_elt);
 	dom_elt.find('.auto_editable').editable();
@@ -263,18 +275,26 @@ function inject_hooks(dom_elt) {
     // FIXME: a little too agressive:
     dom_elt.find("form input").keypress(function (e) {
         var t = e.target;
-        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+        var ctrl_k = e.ctrlKey;
+        var shift_k = e.shiftKey;
+        var main_inp = (t.id === "new_task_descr" || t.id === "new_task_project");
+        var val_k = (e.which && (e.which == 13 || e.which == 10)) || (e.keyCode && (e.keyCode == 13 || e.keyCode == 10));
 
-            if (t.id === "new_task_project") { // filter groups
-                $('#filter_action').click();
-            } else {
-                $('button[type=submit]:first').click();
-            }
-
+        if (main_inp && val_k && ctrl_k) {
+            $('#filter_action').click();
             return false;
-        } else {
-            return true;
+        } else if(val_k && shift_k) {
+            if(main_inp) {
+                reset_main_display();
+            } else {
+                $(t).val('');
+            }
+            return false;
+        } else if(val_k) {
+            $('button[type=submit]:first').click();
+            return false;
         }
+        return true;
     });
 };
 
@@ -302,8 +322,8 @@ function load_tasks() {
 			connectWith: '.connected_tasks',
 		   receive: event_task_drop
 		});
-        $('#pending_tasks li').each( function(i,o) {
-            rev_sel[o.id] = $(o);
+        $('li.task').each( function(i,o) {
+            task_by_uuid(o.id).widget = $(o);
         });
 	});
     // bind automatic URL edition
