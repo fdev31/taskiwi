@@ -22,6 +22,10 @@ class _ConfigObj(object):
             if self._mtime < st:
                 self._mtime = st
                 self._cfg.read(config_filename)
+                # sanity checks
+                db = self['databases']
+                if not db.endswith('/'):
+                    self['databases'] = db + '/'
 
     def __init__(self):
 
