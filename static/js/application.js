@@ -235,13 +235,6 @@ function sort_tasks(opts) {
 
     // don't redraw if initial state
     var pt = $('#pending_tasks');
-    if( pt.length != 0) {
-        // XXX: useless ??
-        pt.find('li').each( function(i,o) { var o= $(o).detach(); task_by_uuid($(o).attr('id')).widget = o; } );
-        all_tasks['pending'].forEach( function(o) {
-            task_by_uuid(o.uuid).widget.appendTo(pt);
-        });
-    }
 };
 
 // INIT
