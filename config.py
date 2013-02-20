@@ -47,7 +47,7 @@ class _ConfigObj(object):
             val = ''
 
         val = self._cfg.set('DEFAULT', name, val)
-        config._cfg.write(open(config_filename, 'w'))
+        self._cfg.write(open(config_filename, 'w'))
         return val
 
     def __getattr__(self, name):
