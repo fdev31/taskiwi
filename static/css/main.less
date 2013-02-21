@@ -5,6 +5,7 @@
 @hicolor: rgb(255, 242, 98);
 @medcolor: #efe;
 @locolor: #ccc;
+@selcolor: rgb(255, 224, 63);
 
 .animated() {
     -webkit-transition-duration: 1000ms;
@@ -35,7 +36,7 @@
     padding: .5ex;
     border: solid 1px transparent;
     &:hover {
-        .gradient(#ffd, white);
+        .gradient(@selcolor, white);
         border: solid 1px white;
         .shadow(1px, 4px, 0.3);
     }
