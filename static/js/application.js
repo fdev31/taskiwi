@@ -204,6 +204,14 @@ function sort_tasks(opts) {
     var only_pending = opts.todo_only;
 
     var sort_by_project = function(a, b) {
+        var delta = 0;
+        if (!!a.start && !!b.start) {
+            return a.start - b.start;
+        } else if (!!a.start && !!!b.start) {
+            return -1;
+        } else if(!!!a.start && !!b.start) {
+            return 1;
+        }
         var rp = (_prios[b.priority] || 2) - (_prios[a.priority] || 2) ;
         if(rp !== 0)
             return rp;
