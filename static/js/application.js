@@ -250,7 +250,7 @@ function set_focus() {
 };
 
 function rmquot(txt) {
-    return txt.replace(/\\"/g, '"').replace(/\[\\n\]/g, '<br/>');
+    return txt.replace(/\\"/g, '"').replace(/\[\\n\]/g, '\n');
 };
 
 function render(tpl_name, opts) {
@@ -267,9 +267,23 @@ function reset_main_display() {
     return false;
 }
 
+function markdownize(text) {
+    console.log('convering', text);
+    var html = marked(text);
+    if (!!html.match(RegExp('^<p>'))) {
+        html = html.substr(3, html.length-8);
+    }
+    return html;
+}
+
 function inject_hooks(dom_elt) {
 	console.log('infecting', dom_elt);
 	dom_elt.find('.auto_editable').editable();
+    dom_elt.find('.auto_markdown').each(function(i,t) {
+        var t = $(t);
+        console.log(t, t.text());
+        t.html(markdownize(t.text()));
+    });
 
     // FIXME: a little too agressive:
     dom_elt.find("form input").keypress(function (e) {
