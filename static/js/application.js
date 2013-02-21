@@ -53,6 +53,10 @@ function update_item(data) {
     t.widget = o;
 };
 
+function ts() {
+    return new Date().getTime()/1000;
+};
+
 function start_task(uuid) {
     var t = task_by_uuid(uuid);
     var icon = t.widget.find('i.start_stop');
@@ -60,7 +64,7 @@ function start_task(uuid) {
     if (!!t.start) { // already started
         val = '';
     } else {
-        val = new Date().getTime()/1000;
+        val = ts();
     }
     $.post('./edit', {'pk': uuid, 'name': 'start', 'value': val})
         .success( update_item );
