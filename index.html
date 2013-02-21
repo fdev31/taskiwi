@@ -163,7 +163,7 @@
                 </div>
 
                 <div class="input-append">
-                    <input title="Type the description of the task here. Can be partial if you'r using the filter action." placeholder="Short description or part of the filter" type="text" id="new_task_descr" class="input-xlarge search-query">
+                    <input title="Type the description of the task here. Can be partial if you'r using the filter action. (focus: Alt-J)" placeholder="Short description or part of the filter" type="text" id="new_task_descr" class="input-xlarge search-query">
                     <button type="submit" id="add_action" class="btn" onclick="add_new_task($('#new_task_project').val(), $('#new_task_descr').val(), function(){$('#new_task_descr').val(''); set_focus();}); return false;" title="Add a task with given descripion in the given project (or none)" value=""><i class="icon-plus"></i></input>
                         <button id="filter_action" onclick="apply_filter({proj: $('#new_task_project').val(), descr: $('#new_task_descr').val()}); set_focus(); return false;" class="btn" title="Hides tasks that aren't matching project and description entries (Ctrl+Enter)"><i class="icon-filter"></i></button>
                     </div>
