@@ -59,20 +59,25 @@
 	  </div>
 	  <div class="modal-body">
 
-          [<b>
-              <a class="auto_editable" href="#" data-placement="right" data-type="text" data-pk="{{uuid}}" data-emptytext="No project" data-name="project" data-original-title="Enter project name">{{project}}</a>
-          </b>]
+    <form class="form-search row-fluid btn-toolbar" action="#">
+        <div class="btn-group control-group row-fluid" >
+            <div class="controls">
+                &nbsp;<input title="Optional project of the task"
+                    value="{{project}}"
+                    placeholder="Project name"
+                    type="text"
+                    id="new_task_project"
+                    class="input-medium"
+                    data-provide="typeahead" />
+                    <span class="pull-right">
+                        Priority:
+                        <a class="auto_editable" href="#" data-placement="bottom" data-type="select" data-name="priority" data-pk="{{uuid}}" data-value="{{priority}}" data-source="{'L':'Low', '': 'None', 'M': 'Medium', 'H': 'High',}" data-original-title="Change priority" data-emptytext="None">{{priority}}</a>
+                    </span>
+            </div>
+            <dl class="dl-horizontal">
 
-          <span class="pull-right">
-              Priority:
-              <a class="auto_editable" href="#" data-placement="bottom" data-type="select" data-name="priority" data-pk="{{uuid}}" data-value="{{priority}}" data-source="{'L':'Low', '': 'None', 'M': 'Medium', 'H': 'High',}" data-original-title="Change priority" data-emptytext="None">{{priority}}</a>
-
-          </span>
-
-		  <dl class="dl-horizontal">
-
-		    <dt>created on</dt>
-		    <dd>{{date}}</dd>
+                <dt>created on</dt>
+                <dd>{{date}}</dd>
 
             {{#due_date}}
 		    <dt>due for</dt>
@@ -89,11 +94,9 @@
 		    <dd>{{end_date}}</dd>
             {{/end_date}}
 
-            <hr />
-
 		    <dt>description</dt>
             <dd>
-            <a class="auto_editable" href="#" data-placement="bottom" data-type="textarea" data-pk="{{uuid}}" data-name="description" data-original-title="Enter new description">{{{description}}}</a>
+            <a class="auto_editable" href="#" data-placement="left" data-type="textarea" data-pk="{{uuid}}" data-name="description" data-original-title="Enter new description">{{{description}}}</a>
             </dd>
 
             <hr />

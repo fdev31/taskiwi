@@ -278,6 +278,10 @@ function markdownize(text) {
 
 function inject_hooks(dom_elt) {
 	console.log('infecting', dom_elt);
+	dom_elt.find('.auto_editable[data-type=textarea]').each(function(i,t) {
+        var t = $(t);
+        t.html(t.text().replace(RegExp('\n', 'g'), '<br/>'));
+    });
 	dom_elt.find('.auto_editable').editable();
     dom_elt.find('.auto_markdown').each(function(i,t) {
         var t = $(t);
