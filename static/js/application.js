@@ -77,7 +77,7 @@ function edit_task_popup(uuid) {
 };
 
 function format_date(timestamp) {
-	var r = moment(new Date(timestamp)).format("DD/M/YYYY");
+	var r = moment(new Date(timestamp*1000)).format("DD/M/YYYY");
 	return r;
 };
 
@@ -88,7 +88,7 @@ function prepare(item) {
     for (k in item) {
         if (!!k.match(/^annotation_/)) {
 		    annotations.push(
-	            {'id': format_date(eval(k.match(/^annotation_(.*)/)[1]) * 1000),
+	            {'id': format_date(eval(k.match(/^annotation_(.*)/)[1])),
 	                'content': item[k]
 	            });
         }
@@ -98,19 +98,19 @@ function prepare(item) {
 	// creation date
 	if(item.entry)
 		item.date = function() {
-			return format_date(item.entry*1000);
+			return format_date(item.entry);
 		};
 	if (item.due)
     	item.due_date = function() {
-			return format_date(item.due*1000);
+			return format_date(item.due);
 		};
 	if(item.start)
 		item.start_date = function() {
-			return format_date(item.start*1000);
+			return format_date(item.start);
 		};
 	if(item.end)
 		item.end_date = function() {
-			return format_date(item.end*1000);
+			return format_date(item.end);
 		};
 };
 
