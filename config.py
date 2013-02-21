@@ -5,7 +5,7 @@ except ImportError: # py2
 from time import time
 import os
 
-defaults_dict = {'root': os.path.curdir, 'databases': '/tmp/'}
+defaults_dict = {'root': os.path.curdir, 'databases': '/tmp/', 'read_write': False}
 config_filename = 'taskw.ini'
 
 class _ConfigObj(object):
@@ -53,6 +53,8 @@ class _ConfigObj(object):
     def __getattr__(self, name):
         self._refresh()
         v = self._cfg.get('DEFAULT', name)
+        if v.lower() in ('false', 'no', 'disabled'):
+            return False
         return v
 
     __setitem__ = __setattr__

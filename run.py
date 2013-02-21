@@ -20,6 +20,8 @@ def getmakeroot(tid):
         db = conf['databases']
         rcfile = db + tid + '.rc'
         if not os.path.exists(rcfile):
+            if not conf.read_write:
+                raise ValueError("Operation not allowed")
             try:
                 os.mkdir(db + tid)
             except OSError:
@@ -58,6 +60,9 @@ def cb(tid):
 
 @bottle.route('/<tid>/edit', method='POST')
 def cb(tid):
+    if not conf.read_write:
+        bottle.abort(401, 'Operation blocked by admin')
+
     w = getmakeroot(tid)
     params = bottle.request.POST
     task = {'uuid': params.pk,
