@@ -353,23 +353,26 @@ function select_project(opts) {
 	$('.auto_editable').editable('hide');
 	$('.form-search input').attr('disabled', false);
 	$('.form-search button').attr('disabled', false);
-	*/
+};
+
+function show_task_list() {
+    /* show tasks */
+    load_tasks();
+    $('#mainbody').show();
+    $('body').keydown( function(e) {
+        if(!!e.altKey) {
+            if(e.which === 74) {
+                set_focus();
+            } else if (e.which === 80) {
+                $('#new_task_project').focus();
+            }
+        }
+    });
 };
 
 $(function() {
-	if (window.location.href.match(RegExp('.*/#$'))) {
-        /* show tasks */
-		load_tasks();
-		$('#mainbody').show();
-        $('body').keydown( function(e) {
-            if(!!e.altKey) {
-               if(e.which === 74) {
-                    set_focus();
-                } else if (e.which === 80) {
-                    $('#new_task_project').focus();
-                }
-            }
-        });
+	if (window.location.href.match(RegExp('.*/[?]?#$'))) {
+        show_task_list();
 	} else {
         /* show tasks-list */
 		$('.form-search input').attr('disabled', true);
