@@ -59,17 +59,11 @@ function start_task(uuid) {
     var val;
     if (!!t.start) { // already started
         val = '';
-        icon.addClass('icon-play');
-        icon.removeClass('icon-pause');
     } else {
         val = new Date().getTime()/1000;
-        icon.removeClass('icon-play');
-        icon.addClass('icon-pause');
     }
     $.post('./edit', {'pk': uuid, 'name': 'start', 'value': val})
         .success( update_item );
-    // TODO: handle icon change
-    // TODO: refresh item
 };
 
 function edit_task_popup(uuid) {
