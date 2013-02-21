@@ -133,7 +133,7 @@
 </div>
 </script>
 
-<script id="taskitem" type="text/html"><li class="dragdrop-draggable {{#start}}task_running {{/start}}dragdrop-handle task task_{{status}} task_pri{{priority}}"
+<script id="taskitem" type="text/html"><li ondblclick="edit_task_popup('{{uuid}}'); return false" class="dragdrop-draggable {{#start}}task_running {{/start}}dragdrop-handle task task_{{status}} task_pri{{priority}}"
 	{{#due}}title="due for {{due_date}}"{{/due}}
 	{{^due}}title="created on {{date}}"{{/due}}
 	id="{{uuid}}">
