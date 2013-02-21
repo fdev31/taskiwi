@@ -146,6 +146,7 @@
 		{{#editable}}
         <a class="btn btn-mini pull-right" href="#" onclick="start_task('{{uuid}}'); return false;"><i class="start_stop {{#start}}icon-pause{{/start}}{{^start}}icon-play{{/start}}"></i></a>
         <a class="btn btn-mini pull-right" href="#" onclick="edit_task_popup('{{uuid}}'); return false;"><i class="icon-pencil"></i></a>
+        <a class="btn btn-mini pull-right" href="#" onclick="toggle_minimized(this); return false;"><i class="icon-chevron-down"></i></a>
 		{{/editable}}
 		&nbsp;
         <span class="auto_markdown">{{{description}}}</span>

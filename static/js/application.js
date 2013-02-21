@@ -276,6 +276,19 @@ function markdownize(text) {
     return html;
 }
 
+function toggle_minimized(obj) {
+    var cl = obj.parentElement.classList;
+    if(!!cl.contains('minimized')) {
+        obj.parentElement.classList.remove('minimized');
+        obj.querySelector('i').classList.add('icon-chevron-up');
+        obj.querySelector('i').classList.remove('icon-chevron-down');
+    } else {
+        obj.parentElement.classList.add('minimized');
+        obj.querySelector('i').classList.add('icon-chevron-down');
+        obj.querySelector('i').classList.remove('icon-chevron-up');
+    }
+};
+
 function inject_hooks(dom_elt) {
 	console.log('infecting', dom_elt);
 	dom_elt.find('.auto_editable[data-type=textarea]').each(function(i,t) {
@@ -288,6 +301,7 @@ function inject_hooks(dom_elt) {
         console.log(t, t.text());
         t.html(markdownize(t.text()));
     });
+    dom_elt.find('li.task').addClass('minimized');
 
     // FIXME: a little too agressive:
     dom_elt.find("form input").keypress(function (e) {

@@ -10,8 +10,9 @@
 .animated() {
     -webkit-transition-duration: 1000ms;
     transition-duration: 1000ms;
-    -webkit-transition-property: background-color, border, opacity;
-    transition-property:  background-color, border, opacity;
+    -webkit-transition-property: background-color,border-color,opacity,height,max-height;
+    transition-property:  background-color,border-color,opacity,height,max-height;
+    -webkit-transition-timing-function: ease-out;
 }
 
 .shadow(@a, @b,@c) {
@@ -44,6 +45,11 @@
 .wip {
 	background-color: rgb(127, 190, 173);
 }
+
+.minimized {
+    max-height: 3em;
+}
+
 ul.connected_tasks {
 	padding: 1ex;
     margin: 0;
@@ -55,6 +61,7 @@ ul.connected_tasks {
         -moz-border-radius: 5px;
         vertical-align: middle;
         cursor: pointer;
+        overflow: hidden;
     }
     li.task_priL {
         .nice-gradient-box(@locolor, @seccolor);
