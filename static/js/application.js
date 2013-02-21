@@ -72,8 +72,7 @@ function start_task(uuid) {
 
 function edit_task_popup(uuid) {
 	var t = duplicate( task_by_uuid(uuid) );
-	var e = ich.edit_dialog(t);
-	inject_hooks(e);
+	var e = render('edit_dialog', t);
     e.modal();
 };
 
@@ -123,7 +122,7 @@ function add_new_task(proj, descr, cb) {
             infos.editable = true;
             if (!!proj)
                 infos.project = proj;
-            var ti = ich.taskitem(infos);
+            var ti = render('taskitem', infos);
             prepare(infos);
             infos.widget = ti;
             ti.appendTo('#pending_tasks');
@@ -215,12 +214,14 @@ function sort_tasks(opts) {
 
         var x = (a.project || '').toUpperCase();
         var y = (b.project || '').toUpperCase();
+
         if(!!groups) {
             if(!only_pending || a.status === 'pending')
                 groups[a.project] = true;
             if(!only_pending || b.status === 'pending')
                 groups[b.project] = true;
         }
+
         if(x < y) {
             return -1;
         } else if (x === y) {
